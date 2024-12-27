@@ -13,7 +13,9 @@ export const warn = (msg, fn = 'error') => {
 
 export function extend(to, _from) {
   for (const key in _from) {
-    to[key] = _from[key];
+    if (Object.prototype.hasOwnProperty.call(_from, key)) {
+      to[key] = _from[key];
+    }
   }
   return to;
 }

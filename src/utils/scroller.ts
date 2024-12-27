@@ -510,8 +510,8 @@ export default class Scroller {
         // Only do further compution when change happened
         if (oldLevel !== level) {
           // Compute relative event position to container
-          var currentTouchLeftRel = currentTouchLeft - this._clientLeft;
-          var currentTouchTopRel = currentTouchTop - this._clientTop;
+          const currentTouchLeftRel = currentTouchLeft - this._clientLeft;
+          const currentTouchTopRel = currentTouchTop - this._clientTop;
 
           // Recompute left and top coordinates based on new zoom level
           scrollLeft = (currentTouchLeftRel + scrollLeft) * level / oldLevel - currentTouchLeftRel;
@@ -677,7 +677,9 @@ export default class Scroller {
         }
         // @ts-ignore
       } else if (timeStamp - this._lastTouchMove > 100) {
-        !this.options.snapping && this.options.scrollingComplete();
+        if (!this.options.snapping) {
+          this.options.scrollingComplete();
+        }
       }
     }
 
@@ -924,7 +926,7 @@ export default class Scroller {
       // This is the factor applied to every iteration of the animation
       // to slow down the process. This should emulate natural behavior where
       // objects slow down when the initiator of the movement is removed
-      var frictionFactor = 0.95;
+      const frictionFactor = 0.95;
       this._decelerationVelocityX *= frictionFactor;
       this._decelerationVelocityY *= frictionFactor;
     }
