@@ -1,7 +1,7 @@
 {
   "name": "tg-scroll-view",
   "version": "0.0.1",
-  "description": "scroll view component with virtual scroll in react ",
+  "description": "react scroll view component with virtual scroll",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
