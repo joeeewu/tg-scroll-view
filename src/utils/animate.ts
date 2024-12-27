@@ -46,7 +46,7 @@ const Animate = (global => {
       }
 
       const TARGET_FPS = 60;
-      let requests: { [key: number]: Function } = {};
+      let requests: { [key: number]: () => void } = {};
       let requestCount = 0;
       let rafHandle = 1;
       let intervalHandle: any = null;
@@ -127,7 +127,7 @@ const Animate = (global => {
      *   usage of requestAnimationFrame.
      * @return {Integer} Identifier of animation. Can be used to stop it any time.
      */
-    start(stepCallback: Function, verifyCallback: Function, completedCallback: Function, duration?: number, easingMethod?: Function, element?: Element) {
+    start(stepCallback: () => void, verifyCallback: () => void, completedCallback: () => void, duration?: number, easingMethod?: () => void, element?: Element) {
       const start = time();
       let lastFrame = start;
       let percent = 0;
@@ -138,7 +138,9 @@ const Animate = (global => {
       if (id % 20 === 0) {
         const newRunning: { [key: number]: any } = {};
         for (const usedId in running) {
-          newRunning[usedId] = true;
+          if (Object.prototype.hasOwnProperty.call(running, usedId)) {
+            newRunning[usedId] = true;
+          }
         }
         running = newRunning;
       }
