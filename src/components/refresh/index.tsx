@@ -24,7 +24,7 @@ const defaultProps = {
 };
 
 function ScrollViewRefresh(p: ScrollViewRefreshProps) {
-  const domRef = useRef<HTMLDivElement>();
+  const domRef = useRef<HTMLDivElement>(null);
   const props = mergeProps(defaultProps, p);
   const {
     scrollTop,
