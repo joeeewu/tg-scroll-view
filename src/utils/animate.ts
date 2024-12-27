@@ -46,13 +46,13 @@ const Animate = (global => {
       }
 
       const TARGET_FPS = 60;
-      let requests: { [key: number]: () => void } = {};
+      let requests: { [key: number]: (timestamp: number) => void } = {};
       let requestCount = 0;
       let rafHandle = 1;
       let intervalHandle: any = null;
       let lastActive = +new Date();
 
-      return (callback: () => void) => {
+      return (callback: (timestamp: number) => void) => {
         const callbackHandle = rafHandle++;
 
         // Store callback
@@ -95,7 +95,7 @@ const Animate = (global => {
      * @param id {Integer} Unique animation ID
      * @return {Boolean} Whether the animation was stopped (aka, was running before)
      */
-    stop(id) {
+    stop(id: number) {
       const cleared = running[id] != null;
       cleared && (running[id] = null);
       return cleared;
@@ -127,7 +127,14 @@ const Animate = (global => {
      *   usage of requestAnimationFrame.
      * @return {Integer} Identifier of animation. Can be used to stop it any time.
      */
-    start(stepCallback: () => void, verifyCallback: () => void, completedCallback: () => void, duration?: number, easingMethod?: () => void, element?: Element) {
+    start(
+      stepCallback: (percent: number, now: number, render: any) => boolean | void,
+      verifyCallback: (id: number) => boolean,
+      completedCallback: (renderedFramesPerSecond: number, animationId: number, wasFinished: boolean) => void,
+      duration?: number,
+      easingMethod?: (percent: number) => number,
+      element?: Element,
+    ) {
       const start = time();
       let lastFrame = start;
       let percent = 0;

@@ -31,7 +31,7 @@ function TgActivityIndicatorRolling(p: PropsWithChildren<TgActivityIndicatorRoll
   const radius = size / 2;
   const isAutoAnimation = process === undefined;
   const circlePerimeter = size * 3.1415;
-  const strokeDasharray = `${process * circlePerimeter} ${(1 - process) * circlePerimeter}`;
+  const strokeDasharray = `${Number(process) * circlePerimeter} ${(1 - Number(process)) * circlePerimeter}`;
   return (
     <div className="tg-activity-indicator-rolling">
       <div className="rolling-container">

@@ -88,11 +88,11 @@ const defaultProps = {
   onEndReached: () => {},
 };
 
-function TgScrollView<T>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
+function TgScrollView<T = any>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
   // 水平方向的滚动距离
-  const [scrollX, setScrollX] = useState<number | null>(null);
+  const [scrollX, setScrollX] = useState<number>(0);
   // 垂直方向的滚动距离
-  const [scrollY, setScrollY] = useState<number | null>(null);
+  const [scrollY, setScrollY] = useState<number>(0);
   const [isRefreshing, setRefreshing] = useState(false);
   const [isRefreshActive, setRefreshActive] = useState(false);
   const [isEndReachingStart, setEndReachingStart] = useState(false);
@@ -196,6 +196,7 @@ function TgScrollView<T>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
       event.preventDefault();
     }
 
+    // @ts-ignore
     scroller.doTouchMove(event.touches, event.timeStamp, event.scale);
 
     const boundaryDistance = 15;
@@ -527,7 +528,7 @@ function TgScrollView<T>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
       if (typeof itemKey === 'function') {
         return itemKey(item);
       }
-      return item?.[itemKey as string];
+      return (item as any)?.[String(itemKey)];
     },
     [itemKey],
   );
@@ -541,8 +542,6 @@ function TgScrollView<T>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
   const height = size.height;
   const [setInstanceRef, collectHeight, heights, heightUpdatedMark] = useHeights(
     getKey,
-    null,
-    null,
   );
 
   const onContainerResize = (sizeInfo: SizeInfo) => {
@@ -552,7 +551,7 @@ function TgScrollView<T>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
     });
   };
 
-  const fillerInnerRef = useRef<HTMLDivElement>();
+  const fillerInnerRef = useRef<HTMLDivElement>(null);
   const containerHeight = useMemo(
     () => Object.values(heights.maps).reduce((total, curr) => total + curr, 0),
     [heights.id, heights.maps],
@@ -569,7 +568,7 @@ function TgScrollView<T>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
   } = React.useMemo(() => {
     if (!useVirtual) {
       return {
-        scrollHeight: undefined,
+        scrollHeight: 0,
         start: 0,
         end: mergedData.length - 1,
         offset: undefined,
@@ -587,9 +586,9 @@ function TgScrollView<T>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
     }
 
     let itemTop = 0;
-    let startIndex: number;
+    let startIndex: number | null = null;
     let startOffset: number;
-    let endIndex: number;
+    let endIndex: number | null = null;
 
     const dataLen = mergedData.length;
     for (let i = 0; i < dataLen; i += 1) {
@@ -600,13 +599,13 @@ function TgScrollView<T>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
       const currentItemBottom = itemTop + (cacheHeight === undefined ? itemHeight : cacheHeight);
 
       // Check item top in the range
-      if (currentItemBottom >= scrollY && startIndex === undefined) {
+      if (currentItemBottom >= scrollY && startIndex === null) {
         startIndex = i;
         startOffset = itemTop;
       }
 
       // Check item bottom in the range. We will render additional one item for motion usage
-      if (currentItemBottom > scrollY + height && endIndex === undefined) {
+      if (currentItemBottom > scrollY + height && endIndex === null) {
         endIndex = i;
       }
 
@@ -614,13 +613,13 @@ function TgScrollView<T>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
     }
 
     // When scrollTop at the end but data cut to small count will reach this
-    if (startIndex === undefined) {
+    if (startIndex === null) {
       startIndex = 0;
       startOffset = 0;
       endIndex = Math.ceil(height / itemHeight);
     }
 
-    if (endIndex === undefined) {
+    if (endIndex === null) {
       endIndex = mergedData.length - 1;
     }
 
@@ -631,6 +630,7 @@ function TgScrollView<T>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef>) {
       scrollHeight: itemTop,
       start: startIndex,
       end: endIndex,
+      // @ts-ignore
       offset: startOffset,
     };
   }, [inVirtual, useVirtual, scrollY, mergedData, heightUpdatedMark, height]);

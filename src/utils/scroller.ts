@@ -12,23 +12,23 @@ import { noop, warn, extend } from './index';
 import Animate, { easeOutCubic, easeInOutCubic } from './animate';
 
 interface ScrollerOptions {
-  scrollingX?: boolean;
-  scrollingY?: boolean;
-  animating?: boolean;
-  animationDuration?: number;
-  inRequestAnimationFrame?: boolean;
-  bouncing?: boolean;
-  locking?: boolean;
-  paging?: boolean;
-  snapping?: boolean;
-  snappingVelocity?: number;
-  zooming?: boolean;
-  minZoom?: number;
-  maxZoom?: number;
-  speedMultiplier?: number;
-  scrollingComplete?: () => void;
-  penetrationDeceleration?: number;
-  penetrationAcceleration?: number;
+  scrollingX: boolean;
+  scrollingY: boolean;
+  animating: boolean;
+  animationDuration: number;
+  inRequestAnimationFrame: boolean;
+  bouncing: boolean;
+  locking: boolean;
+  paging: boolean;
+  snapping: boolean;
+  snappingVelocity: number;
+  zooming: boolean;
+  minZoom: number;
+  maxZoom: number;
+  speedMultiplier: number;
+  scrollingComplete: () => void;
+  penetrationDeceleration: number;
+  penetrationAcceleration: number;
 }
 
 type ScrollerCallback = (left: number, top: number, zoomLevel?: number) => void;
@@ -104,7 +104,7 @@ export default class Scroller {
   _enableScrollY = true;
   _scheduledZoom: number | null = null;
 
-  constructor(callback: ScrollerCallback = noop, options: ScrollerOptions) {
+  constructor(callback: ScrollerCallback = noop, options: Partial<ScrollerOptions>) {
     extend(this.options, options)
     this._callback = callback
   }
@@ -246,7 +246,7 @@ export default class Scroller {
   scrollTo(left: number | null, top: number | null, animate: boolean = false, zoom: number | null = 1) {
     // Stop deceleration
     if (this._isDecelerating) {
-      Animate.stop(this._isDecelerating);
+      Animate.stop(this._isDecelerating as number);
       this._isDecelerating = false;
     }
 
@@ -331,7 +331,7 @@ export default class Scroller {
 
     // Stop deceleration
     if (this._isDecelerating) {
-      Animate.stop(this._isDecelerating);
+      Animate.stop(this._isDecelerating as number);
       this._isDecelerating = false;
     }
 
@@ -391,14 +391,14 @@ export default class Scroller {
 
     // Stop deceleration
     if (this._isDecelerating) {
-      Animate.stop(this._isDecelerating);
+      Animate.stop(this._isDecelerating as number);
       this._isDecelerating = false;
       this._interruptedAnimation = true;
     }
 
     // Stop animation
     if (this._isAnimating) {
-      Animate.stop(this._isAnimating);
+      Animate.stop(this._isAnimating as number);
       this._isAnimating = false;
       this._interruptedAnimation = true;
     }
@@ -723,7 +723,7 @@ export default class Scroller {
     const wasAnimating = this._isAnimating;
 
     if (wasAnimating) {
-      Animate.stop(wasAnimating);
+      Animate.stop(wasAnimating as number);
       this._isAnimating = false;
     }
 

@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import type { CSSProperties, Ref } from 'react';
 import ResizeObserver from 'rc-resize-observer';
+import type { SizeInfo } from 'rc-resize-observer';
 import './index.less';
 
 interface VirtualListProps {
@@ -37,7 +38,7 @@ function VirtualList(props: VirtualListProps, ref: Ref<HTMLDivElement>) {
     };
   }
 
-  const onResize = ({ offsetHeight }) => {
+  const onResize = ({ offsetHeight }: SizeInfo) => {
     if (offsetHeight && onInnerResize) {
       onInnerResize();
     }
