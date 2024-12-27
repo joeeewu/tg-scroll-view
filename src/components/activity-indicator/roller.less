@@ -1,0 +1,36 @@
+.clearfix() {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.absolute-pos(@top: 0, @right: 0, @bottom: 0, @left: 0) {
+  position: absolute;
+  top: @top;
+  right: @right;
+  bottom: @bottom;
+  left: @left;
+}
+
+.tg-activity-indicator-rolling {
+  .clearfix();
+  .rolling-container {
+    position: relative;
+    float: left;
+  }
+  .rolling {
+    float: left;
+    circle.stroke {
+      will-change: auto;
+    }
+  }
+  .content {
+    position: absolute;
+    .absolute-pos();
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
