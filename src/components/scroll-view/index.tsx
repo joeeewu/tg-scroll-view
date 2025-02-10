@@ -309,7 +309,7 @@ function TgScrollView<T = any>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef
     }
   };
 
-  const _onScroll = (left: number, top: number) => {
+  const _onScroll = useMemoizedFn((left: number, top: number) => {
     left = +left.toFixed(2);
     top = +top.toFixed(2);
 
@@ -320,7 +320,7 @@ function TgScrollView<T = any>(p: TgScrollViewProps<T>, ref: Ref<TgScrollViewRef
     setScrollY(top);
     _checkScrollerEnd();
     onScroll?.({ scrollLeft: left, scrollTop: top });
-  };
+  });
 
   const reflowScroller = (force = false) => {
     const container = containerRef.current;
